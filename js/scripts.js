@@ -106,12 +106,30 @@ $(document).ready(function() {
 		//Define newIndex variable for later usage.
 		let newIndex;
 
+		//getting currently visible cards and storing in value
+		visibleCards = getVisibleCard();
+		//Storing length of visibleCards arrray in variable
+		const visibleCount = visibleCards.length
+
 		//If the "prev" button is press subtract one from the current index and if "next" is press add one to the current index.
 		if ($(event.target).hasClass('modal-prev')) {
 			newIndex = currentModalIndex - 1;
+			//Check if newIndex is visible before showing it if not minus one from the new index until a visible card is found
+			while (!$(`[data-index='${newIndex}']`).is(":visible")) {
+				newIndex--;
+			}
+
 		} else if ($(event.target).hasClass('modal-next')) {
 			newIndex = currentModalIndex + 1;
+			//Check if newIndex is visible before showing it if not add one to the new index until a visible card is found
+			while (!$(`[data-index='${newIndex}']`).is(":visible")) {
+				newIndex++;
+			}
+
 		}
+
+
+
 		//Call showModal function with the new requested index and pass the array containing all thge employees.
 		showModal(newIndex, resultArray);
 
@@ -175,11 +193,21 @@ function showModal(index, employees) {
 	//Set index as data-index attribute for modal-info-containter
 	$(".modal-info-container").attr("data-index", index);
 
-	//If index is first (0) hide prev button or if last (length of employees - 1) hide next button. If not first or last show both buttons
-	if (index == 0) {
-		$("#modal-prev").hide();
-	} else if (index == employees.length - 1) {
+	//Make sure modal button container is show again
+	$(".modal-btn-container").show();
+
+	//Get currently visible cards and store it in value
+	visibleCards = getVisibleCard();
+	//Storing length of visibleCards arrray in variable
+	const visibleCount = visibleCards.length
+
+	//If index is first visible card hide prev button or if last visible card hide next button. If not first or last show both buttons
+	if (index == visibleCards[0] && index == visibleCards[visibleCount - 1]) {
+		$(".modal-btn-container").hide();
+	} else if (index == visibleCards[visibleCount - 1]) {
 		$("#modal-next").hide();
+	} else if (index == visibleCards[0]) {
+		$("#modal-prev").hide();
 	} else {
 		$("#modal-prev").show();
 		$("#modal-next").show();
@@ -190,3 +218,18 @@ function showModal(index, employees) {
 
 }
 
+//Function for getting array containing all data-index of the currently visible cards
+function getVisibleCard() {
+	//Init
+	let visibleCards = [];
+	//Populate
+	$(".card:visible").each(function(index) {visibleCards.push(($(this).attr("data-index")))});
+
+	return visibleCards;
+
+}
+
+/*document.body.style.watch('color', function(name, v0, v1) {
+    alert(name+': '+v0+'->'+v1);
+});
+document.body.style.color= 'red';*/
