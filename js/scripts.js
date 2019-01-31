@@ -215,6 +215,8 @@ function showModal(index, employees) {
 
 	//Then show the modal
 	$(".modal-container").show();
+	//Make sure modal info container is shown
+	$(".modal-info-container").show();
 
 }
 
@@ -229,7 +231,3 @@ function getVisibleCard() {
 
 }
 
-/*document.body.style.watch('color', function(name, v0, v1) {
-    alert(name+': '+v0+'->'+v1);
-});
-document.body.style.color= 'red';*/
